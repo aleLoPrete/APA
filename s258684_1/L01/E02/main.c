@@ -4,12 +4,12 @@
 
 
 
-void encode();
-void stampaSuFile();
-void wordEncoder();
+void encode(char parola[], const char dicPath[],FILE *pntEncode);
+
+void wordEncoder(char parola[], int index, char match[], char codifica[], char toBePrinted[] );
 int main() {
 
-    FILE *pntSor, *pntDiz;
+    FILE *pntSor, *pntEcd;
     const char *PATHsorgente = "C:\\Users\\Alessandro\\Documents\\POLI\\APA\\lab\\svolgimenti\\lab01\\es02\\sorgente.txt";
     const char *PATHdizionario = "C:\\Users\\Alessandro\\Documents\\POLI\\APA\\lab\\svolgimenti\\lab01\\es02\\dizionario.txt";
     const char *PATHricodifica = "C:\\Users\\Alessandro\\Documents\\POLI\\APA\\lab\\svolgimenti\\lab01\\es02\\ricodifica.txt";
@@ -24,32 +24,38 @@ int main() {
         return -1;
     }
 
-    pntDiz = fopen(PATHricodifica, "w"); //[DEBUG] cancello i dati eventualmente presenti nel file di ricodifica
-    fclose(pntDiz);
+    pntEcd = fopen(PATHricodifica, "w"); //[DEBUG] cancello i dati eventualmente presenti nel file di ricodifica
+    fclose(pntEcd);
 
-    /*while( fgets(riga, lineMAX, pntSor) != NULL) {
 
-        pntRiga = riga;
-        printf("%s", riga);
+    pntEcd = fopen(PATHricodifica, "a");
 
-        while(sscanf(pntRiga,"%s", parola) == 1 ) {
-
-            encode(parola, PATHdizionario, PATHricodifica);
-
-            pntRiga += strlen(parola);
-        }
-    }*/
-
-     while( fscanf(pntSor, "%s", parola) == 1 ) {
-        encode(parola, PATHdizionario, PATHricodifica);
+    if(pntEcd == NULL ) {
+        return -2;
     }
+
+    while( fgets(riga, lineMAX, pntSor) != NULL) {
+        //TODO sistemare --> se c'è più di uno spazio tra le parola il puntatore non ne tiene conto e si sposta come se ce ne fosse uno
+        pntRiga = riga;
+        while(sscanf(pntRiga,"%s", parola) == 1 ) {
+            printf("%s ", parola); ////[DEBUG]
+
+            encode(parola, PATHdizionario, pntEcd);
+            pntRiga += (strlen(parola)+1);
+        }
+        printf("\n"); ////[DEBUG]
+        fprintf(pntEcd,"\n");
+
+    }
+
+    fclose(pntEcd);
 
     return 0;
 
 }
 
 
-void encode( char parola[], char dicPath[], char encodedPath[] ) {
+void encode(char parola[],const char dicPath[],FILE *pntEncode ) {
 
     FILE *pntDic;
 
@@ -84,23 +90,15 @@ void encode( char parola[], char dicPath[], char encodedPath[] ) {
     }
 
 
-    stampaSuFile(toBePrinted, encodedPath);
-    return;
-
-}
-
-void stampaSuFile(char toBePrinted[], char encodedPath[]) {
-
-    FILE *pntEncode;
-
-    pntEncode = fopen(encodedPath, "a");
-
     fprintf(pntEncode, "%s ", toBePrinted);
 
     return;
+
 }
 
-void wordEncoder(char parola[], int index, char match[], char codifica[], char toBePrinted[] ) {
+
+
+void wordEncoder(char parola[], int index, char match[], char codifica[], char toBePrinted[]) {
     int k, m, j;
     int totLengthSoFar, totWordRead;
 
@@ -121,16 +119,6 @@ void wordEncoder(char parola[], int index, char match[], char codifica[], char t
     }
     toBePrinted[totLengthSoFar] = '\0';
 
-    // TODO problema: la sostituizione può essere più lunga della parola originale, ora la funzione non prende in considerazione questo caso
-
-    /*if(totLengthSoFar < strlen(parola)) {
-        for (j = totLengthSoFar; j < strlen(parola); j++) {
-            toBePrinted[j] = parola[m + strlen(match)];
-        }
-        toBePrinted[j] = '\0';
-    }
-    else
-        toBePrinted[k+m] = '\0';*/
 
     return;
 

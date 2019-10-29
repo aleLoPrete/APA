@@ -16,7 +16,7 @@ typedef struct rettangolo{
 
 int main() {
     FILE *pntSource;
-    const char *PATHSource = "C:\\Users\\Alessandro\\Documents\\POLI\\APA\\lab\\svolgimenti\\lab02\\es01\\cmake-build-debug\\source.txt";
+    const char *PATHSource = "source.txt";
     int matrix[maxrowncol][maxrowncol];
     int rows, columns, i=0, j, area, base = 0, heigth = 0, heigthMax=0, baseMax=0, areaMax=0;
     struct rettangolo retMaxB = {0,0,0,0};
@@ -27,17 +27,7 @@ int main() {
     if(pntSource==NULL)
         return -1;
 
-    //immagazzino la matrice del file in una matrice di stringhe
     fscanf(pntSource, "%d %d", &rows, &columns);
-
-    printf("\nmappa da file:\n");
-    for(i=0; i<rows; i++) {
-        for(j=0; j<columns; j++) {
-            fscanf(pntSource, "%d", &matrix[i][j]);
-            printf("%d ", matrix[i][j]);
-        }
-        printf("\n");
-    }
 
     for(i=0; i<rows; i++) {
         for(j=0; j<columns; j++) {
@@ -46,6 +36,7 @@ int main() {
                 heigth = findH(matrix,i,j,rows,columns);
                 area = base * heigth;
 
+                //azzero la regione esaminata per evitare inutili controlli
                 for(int f=i;f<i+heigth;f++){
                     for(int k=j;k<j+base;k++){
                         matrix[f][k]=0;

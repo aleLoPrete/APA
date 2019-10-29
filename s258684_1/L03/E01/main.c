@@ -1,13 +1,17 @@
 #include <stdio.h>
 #include <string.h>
 
-int findB();
-int findH();
-void leggiMatrice(); // acquisisce la matrice da file e ritorna le dimensioni effettive
-int riconosciRegione();
 enum maxnum{
     maxrowncol = 51,
 };
+
+void leggiMatrice(FILE *pnt, int theMatrice[maxrowncol][maxrowncol], int theMax, int *row, int *col); // acquisisce la matrice da file e ritorna le dimensioni effettive
+
+int riconosciRegione(int theMatrix[maxrowncol][maxrowncol],int theRows, int theColumns,int i, int j, int *thePntBase, int *thePntHeigth);
+
+int findB(int theMatrix[maxrowncol][maxrowncol], int i, int j, int cols);
+
+int findH(int theMatrix[maxrowncol][maxrowncol], int i, int j, int rows);
 
 typedef struct {
     int x;
@@ -18,7 +22,7 @@ typedef struct {
 
 int main() {
     FILE *pntSource;
-    const char *PATHSource = "C:\\Users\\Alessandro\\Documents\\POLI\\APA\\lab\\svolgimenti\\lab03\\es01\\cmake-build-debug\\source.txt";
+    const char *PATHSource = "source.txt";
     int matrix[maxrowncol][maxrowncol];
     int rows=0, columns=0, i=0, j, area, base = 0, heigth = 0;
     rettangolo retMaxB = {0,0,0,0};
@@ -62,13 +66,6 @@ int main() {
         }
 
     }
-    printf("matrice dopo l'esame:\n");
-    for(i=0;i<rows;i++){
-        for(j=0;j<columns;j++){
-            printf("%d ", matrix[i][j]);
-        }
-        printf("\n");
-    }
 
     printf("\nMax Base: estremo superiore SX: (%d,%d) base=%d, altezza=%d, Area=%d\n", retMaxB.x, retMaxB.y, retMaxB.base, retMaxB.altezza, (retMaxB.base * retMaxB.altezza) );
     printf("Max Area: estremo superiore SX: (%d,%d) base=%d, altezza=%d, Area=%d\n", retMaxA.x, retMaxA.y, retMaxA.base, retMaxA.altezza, (retMaxA.base * retMaxA.altezza) );
@@ -86,11 +83,9 @@ void leggiMatrice(FILE *pnt, int theMatrice[maxrowncol][maxrowncol], int theMax,
     *row += theRow;
     *col += theCol;
 
-    printf("\nmappa da file:\n");
     for(i=0; i<theRow; i++) {
         for(j=0; j<theCol; j++) {
             fscanf(pnt, "%d", &theMatrice[i][j]);
-            printf("%d ", theMatrice[i][j]);
         }
         printf("\n");
     }
@@ -114,8 +109,6 @@ int riconosciRegione(int theMatrix[maxrowncol][maxrowncol],int theRows, int theC
                 theMatrix[f][k]=0;
             }
         }
-
-
 
         *thePntHeigth = theHeigth;
         *thePntBase = theBase;

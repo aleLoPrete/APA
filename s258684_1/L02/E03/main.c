@@ -15,8 +15,8 @@ int wordFix();
 int main() {
     FILE *pntSeq;
     FILE *pntTesto;
-    const char *PATHSeq = "C:\\Users\\Alessandro\\Documents\\POLI\\APA\\lab\\svolgimenti\\lab02\\es03(1)\\cmake-build-debug\\sequenze.txt";
-    const char *PATHTesto = "C:\\Users\\Alessandro\\Documents\\POLI\\APA\\lab\\svolgimenti\\lab02\\es03(1)\\cmake-build-debug\\testo.txt";
+    const char *PATHSeq = "sequenze.txt";
+    const char *PATHTesto = "testo.txt";
     int seqLength, indiceRiga = 0, wordPos;
     char seq[MAXsequenza], sequenze[seqRow][seqCol], testoWord[MAXparola], firstWord[MAXparola], secondWord[MAXparola];
 
