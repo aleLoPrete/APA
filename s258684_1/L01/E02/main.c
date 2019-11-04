@@ -10,13 +10,20 @@ void wordEncoder(char parola[], int index, char match[], char codifica[], char t
 int main() {
 
     FILE *pntSor, *pntEcd;
-    const char *PATHsorgente = "C:\\Users\\Alessandro\\Documents\\POLI\\APA\\lab\\svolgimenti\\lab01\\es02\\sorgente.txt";
-    const char *PATHdizionario = "C:\\Users\\Alessandro\\Documents\\POLI\\APA\\lab\\svolgimenti\\lab01\\es02\\dizionario.txt";
-    const char *PATHricodifica = "C:\\Users\\Alessandro\\Documents\\POLI\\APA\\lab\\svolgimenti\\lab01\\es02\\ricodifica.txt";
+    const char *PATHsorgente = "sorgente.txt";
+    const char *PATHdizionario = "dizionario.txt";
+    const char *PATHricodifica = "ricodifica.txt";
     char parola[20];
     char riga[200];
     char *pntRiga;
     int lineMAX = 201;
+
+    pntSor = fopen(PATHsorgente, "a");//[BUG] correzione bug lettura parola finale
+    if(pntSor == NULL ) {
+        return -1;
+    }
+    fprintf(pntSor,"\n");
+    fclose(pntSor);
 
     pntSor = fopen(PATHsorgente, "r");
 
@@ -34,21 +41,22 @@ int main() {
         return -2;
     }
 
-    while( fgets(riga, lineMAX, pntSor) != NULL) {
-        //TODO sistemare --> se c'è più di uno spazio tra le parola il puntatore non ne tiene conto e si sposta come se ce ne fosse uno
-        pntRiga = riga;
-        while(sscanf(pntRiga,"%s", parola) == 1 ) {
-            printf("%s ", parola); ////[DEBUG]
 
-            encode(parola, PATHdizionario, pntEcd);
+
+    while( fgets(riga, lineMAX, pntSor) != NULL) {
+        pntRiga = riga;
+        while(sscanf(pntRiga,"%s ", parola) == 1 ) {
+
             pntRiga += (strlen(parola)+1);
+            encode(parola, PATHdizionario, pntEcd);
+
         }
-        printf("\n"); ////[DEBUG]
         fprintf(pntEcd,"\n");
 
     }
 
     fclose(pntEcd);
+    fclose(pntSor);
 
     return 0;
 
@@ -91,6 +99,7 @@ void encode(char parola[],const char dicPath[],FILE *pntEncode ) {
 
 
     fprintf(pntEncode, "%s ", toBePrinted);
+    fclose(pntDic);
 
     return;
 
