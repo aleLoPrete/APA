@@ -45,7 +45,7 @@ int main() {
 
     while( fgets(riga, lineMAX, pntSor) != NULL) {
         pntRiga = riga;
-        while(sscanf(pntRiga,"%s ", parola) == 1 ) {
+        while(sscanf(pntRiga,"%s ", parola) != NULL ) {
 
             pntRiga += (strlen(parola)+1);
             encode(parola, PATHdizionario, pntEcd);
