@@ -21,7 +21,7 @@ int storeLog(FILE *thePnt, log *theLogArray);
 void printMenu();
 int dichotomicSearching(char theSearchKey[MAXN], log **theLogArray, int l, int r);
 int dichotomicSearchingWrapper(char theSearchKey[MAXN], log **theLogArray, int len);
-void printPointerLog(log **logArray, int start, int logLen);
+void printPointerLog(log **logArray, int start, int logLen, int cmd);
 void sortPointerPerDate(log **theArrayPointerDate, int theLogLen );
 void sortPointerPerTime(log **theArrayPointer, int theLogLen );
 void sortPointerPerPartenza(log **theArrayPointer, int theLogLen );
@@ -36,7 +36,7 @@ int main() {
     log *arrayPointerPartenza[MAXR];
     log *arrayPointerCode[MAXR];
     log *arrayPointerArrivo[MAXR];
-    int logLen, choice=0, logStatus=0;
+    int logLen, choice=0, cmd;
     char searchKey[MAXN];
     int matchingIndex;
     pnt = fopen(PATHfile, "r");
@@ -84,20 +84,22 @@ int main() {
             case -1:
                 return 0;
             case 1:
-                printPointerLog(arrayPointerCode,0,logLen);
+                printf("inserire 1 per stampare a video, 0 per stampare su file(log.txt)");
+                scanf("%d", &cmd);
+                printPointerLog(arrayPointerCode,0,logLen, cmd);
                 break;
             case 2:
-                printPointerLog(arrayPointerDate,0,logLen);
+                printPointerLog(arrayPointerDate,0,logLen,1);
                 break;
             case 3:
-                printPointerLog(arrayPointerCode,0,logLen);
+                printPointerLog(arrayPointerCode,0,logLen,1);
                 break;
 
             case 4:
-                printPointerLog(arrayPointerPartenza,0,logLen);
+                printPointerLog(arrayPointerPartenza,0,logLen,1);
                 break;
             case 5 :
-                printPointerLog(arrayPointerArrivo,0,logLen);
+                printPointerLog(arrayPointerArrivo,0,logLen,1);
                 break;
             case 6 :
                 printf("\ninserisci la stazione di partenza come ricerca\n");
@@ -109,7 +111,7 @@ int main() {
                     break;
                 }
                 printf("la chiave e' stata trovata nella tratta con indice %d:\n", matchingIndex);
-                printPointerLog(arrayPointerPartenza, matchingIndex, 1);
+                printPointerLog(arrayPointerPartenza, matchingIndex, 1, 1);
                 break;
 
         }
@@ -143,13 +145,24 @@ int storeLog(FILE *thePnt, log *theLogArray){
 }
 
 
-void printPointerLog(log **logArray, int start, int logLen){
+void printPointerLog(log **logArray, int start, int logLen, int cmd){
     int i=start;
     int r = i+logLen;
-    for(i=start; i<r; i++) {
-        printf("\n%s %s %s %s %s -> %s delay: %d minuti\n", (*logArray[i]).idCode, logArray[i]->partenza, logArray[i]->arrivo,
-               logArray[i]->dataLog,logArray[i]->StartingTime, logArray[i]->ArrivalTime, logArray[i]->delay);
+    if(cmd == 1){
+        for(i=start; i<r; i++) {
+            printf("\n%s %s %s %s %s -> %s delay: %d minuti\n", (*logArray[i]).idCode, logArray[i]->partenza, logArray[i]->arrivo,
+                   logArray[i]->dataLog,logArray[i]->StartingTime, logArray[i]->ArrivalTime, logArray[i]->delay);
+        }
     }
+    else {
+        FILE *fp = fopen("log.txt", "w+");
+        for(i=start; i<r; i++) {
+            fprintf(fp,"\n%s %s %s %s %s -> %s delay: %d minuti\n", (*logArray[i]).idCode, logArray[i]->partenza, logArray[i]->arrivo,
+                   logArray[i]->dataLog,logArray[i]->StartingTime, logArray[i]->ArrivalTime, logArray[i]->delay);
+        }
+        fclose(fp);
+    }
+
 }
 
 void sortPointerPerDate(log **theArrayPointer, int theLogLen ){

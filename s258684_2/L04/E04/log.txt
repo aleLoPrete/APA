@@ -1,0 +1,4 @@
+1000B33 Milano Domodossola 2019/10/01 8:00 -> 19:00 delay: 130 minuti
+1010B33 Torino Milano 2019/10/01 6:00 -> 9:59 delay: 19 minuti
+9900A01 Parma Milano 2000/10/01 8:00 -> 11:00 delay: 16 minuti
+1000A02 Torino Parma 2000/10/01 6:00 -> 9:00 delay: 78 minuti

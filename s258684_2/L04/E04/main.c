@@ -5,7 +5,7 @@
 
 
 typedef struct {
-    long idCode;
+    char idCode[MAXN];
     char partenza[MAXN];
     char arrivo[MAXN];
     char dataLog[MAXN];
@@ -17,9 +17,9 @@ typedef struct {
 
 
 int storeLog(FILE *thePnt, log *theLogArray);
-void printLog();
+void printLog(log *logArray, int start, int logLen, int cmd);
 void printMenu();
-int printLogStatus();
+int printLogStatus(int choice);
 void sortLogPerDate(log *theLogArray, int theLogLen);
 void sortLogPerTime(log *theLogArray, int theLogLen);
 void sortLogPerCode(log *theLogArray, int theLogLen);
@@ -34,7 +34,7 @@ int main() {
     FILE *pnt;
     const char PATHfile[30] = "corse.txt";
     log logArray[1000];
-    int logLen, choice=0, logStatus=0;
+    int logLen, choice=0, logStatus=0, cmd;
     char searchKey[MAXN];
     int matchingIndex;
     pnt = fopen(PATHfile, "r");
@@ -55,7 +55,9 @@ int main() {
             case -1:
                 return 0;
             case 1:
-                printLog(logArray, 0, logLen);
+                printf("inserire 1 per stampare a video, 0 per stampare su file(log.txt)");
+                scanf("%d", &cmd);
+                printLog(logArray, 0, logLen, cmd);
                 break;
             case 2:
                 sortLogPerTime(logArray,logLen);
@@ -88,7 +90,7 @@ int main() {
                     break;
                 }
                 printf("la chiave e' stata trovata nella tratta con indice %d:\n", matchingIndex);
-                printLog(logArray, matchingIndex, 1);
+                printLog(logArray, matchingIndex, 1, 1);
                 break;
 
         }
@@ -136,7 +138,7 @@ int storeLog(FILE *thePnt, log *theLogArray){
     int theLogLen, i=0;
     fscanf(thePnt,"%d", &theLogLen);
     while( i<theLogLen){
-        fscanf(thePnt,"%li %s %s %s %s %s %d", &(theLogArray[i].idCode), theLogArray[i].partenza, theLogArray[i].arrivo,
+        fscanf(thePnt,"%s %s %s %s %s %s %d", theLogArray[i].idCode, theLogArray[i].partenza, theLogArray[i].arrivo,
                (theLogArray[i].dataLog), theLogArray[i].StartingTime, theLogArray[i].ArrivalTime, &(theLogArray[i].delay));
         i++;
     };
@@ -144,13 +146,23 @@ int storeLog(FILE *thePnt, log *theLogArray){
     return theLogLen;
 }
 
-void printLog(log *logArray, int start, int logLen){
+void printLog(log *logArray, int start, int logLen, int cmd){
     int i=start;
+    FILE* fp;
     int r = i+logLen;
-    for(i=start; i<r; i++) {
-        printf("\n%li %s %s %s %s -> %s delay: %d minuti\n", logArray[i].idCode, logArray[i].partenza, logArray[i].arrivo,
-               logArray[i].dataLog,
-               logArray[i].StartingTime, logArray[i].ArrivalTime, logArray[i].delay);
+    if(cmd == 1){
+        for(i=start; i<r; i++) {
+            printf("\n%s %s %s %s %s -> %s delay: %d minuti\n", logArray[i].idCode, logArray[i].partenza, logArray[i].arrivo, logArray[i].dataLog,
+                   logArray[i].StartingTime, logArray[i].ArrivalTime, logArray[i].delay);
+        }
+    }
+    else{
+        fp = fopen("log.txt", "w+");
+        for(i=start; i<r; i++) {
+            fprintf(fp, "%s %s %s %s %s -> %s delay: %d minuti\n", logArray[i].idCode, logArray[i].partenza, logArray[i].arrivo, logArray[i].dataLog,
+                   logArray[i].StartingTime, logArray[i].ArrivalTime, logArray[i].delay);
+        }
+        fclose(fp);
     }
 }
 
