@@ -1,20 +1,21 @@
+#include "pgList.h"
 #include "pg.h"
+#include "invArray.h"
 
 
 void printMenu(int *choice);
 void runSelectedFun(tabPg *tabPg_t,tabInv *tabInv_t, int choice);
 
 int main() {
-    tabPg tabPg_t;
-    tabInv tabInv_t;
+    tabPg *tabPg_t;
+    tabInv *tabInv_t;
     int choice;
 
-    tabPg_t.head = NULL;
-    tabPg_t.nPg = 0;
+    initTabPg(tabPg_t);
 
     do{
         printMenu(&choice);
-        runSelectedFun(&tabPg_t, &tabInv_t, choice);
+        runSelectedFun(tabPg_t, tabInv_t, choice);
     }while(choice != 0);
     return 0;
 }
@@ -39,28 +40,29 @@ void runSelectedFun(tabPg *tabPg_t, tabInv *tabInv_t, int choice){
 
     switch(choice){
         case 1:
-            tabPg_t->head = getPg(TXT,tabPg_t->head);
+            getPg(TXT,tabPg_t);
             break;
         case 2:
-            tabInv_t->arrInv = storeObj(tabInv_t);
+            storeObj(tabInv_t);
             break;
         case 3:
-            tabPg_t->head = getPg(VIDEO,tabPg_t->head);
+            getPg(VIDEO,tabPg_t);
             break;
         case 4:
-            pgExtraction(tabPg_t->head);
+            pgExtraction(tabPg_t);
             break;
         case 5:
-            addObj2Pg(&tabPg_t->head,tabInv_t);
+            addObj2Pg(tabPg_t,tabInv_t);
             break;
         case 6:
-            statsCalc(tabPg_t);
+            statsCalc(tabPg_t, tabInv_t);
             break;
         case 7:
-            printList(tabPg_t->head);
+            printList(tabPg_t,tabInv_t);
             break;
         case 8:
-            printInv(tabInv_t->arrInv);
+            printInv(tabInv_t);
+        default:
+            break;
     }
-    return;
 }
